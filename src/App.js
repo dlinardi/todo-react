@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import { Navbar } from "./components/Navbar";
+import { TodoRows } from "./components/TodoRows";
 
 export default class App extends Component {
   // prepare data before app starts so render can access that data
@@ -16,23 +18,14 @@ export default class App extends Component {
     };
   }
 
-  todoRows = () =>
-    this.state.todoItems.map((item) => (
-      <tr key={item.action}>
-        <td>{item.action}</td>
-        <td>
-          <input
-            type="checkbox"
-            checked={item.done}
-            onChange={() => this.toggleDone(item)}
-          />
-        </td>
-      </tr>
-    ));
-
   updateValue = (event) => {
     this.setState({ newTodo: event.target.value });
   };
+
+  todoRows = () =>
+    this.state.todoItems.map((item) => (
+      <TodoRows key={item.action} item={item} callback={this.toggleDone} />
+    ));
 
   newTodo = () => {
     this.setState({
@@ -53,11 +46,7 @@ export default class App extends Component {
   render = () => (
     <div className="container">
       <div className="row">
-        <div className="col-12">
-          <h2 className="bg-primary text-white text-center p2">
-            {this.state.userName}'s Todo List
-          </h2>
-        </div>
+        <Navbar name={this.state.userName} />
         <div className="col-12">
           <input
             className="form-control"
