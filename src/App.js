@@ -9,7 +9,7 @@ export default class App extends Component {
       userName: "Dave",
       todoItems: [
         { action: "Buy Milk", done: false },
-        { action: "Dentist at 5pm", done: false },
+        { action: "Dentist at 5pm", done: true },
         { action: "Go to Gym", done: false },
       ],
       newTodo: "",
@@ -20,12 +20,35 @@ export default class App extends Component {
     this.state.todoItems.map((item) => (
       <tr key={item.action}>
         <td>{item.action}</td>
+        <td>
+          <input
+            type="checkbox"
+            checked={item.done}
+            onChange={() => this.toggleDone(item)}
+          />
+        </td>
       </tr>
     ));
 
   updateValue = (event) => {
     this.setState({ newTodo: event.target.value });
   };
+
+  newTodo = () => {
+    this.setState({
+      todoItems: [
+        ...this.state.todoItems,
+        { action: this.state.newTodo, done: false },
+      ],
+    });
+  };
+
+  toggleDone = (todo) =>
+    this.setState({
+      todoItems: this.state.todoItems.map((item) =>
+        item.action === todo.action ? { ...item, done: !item.done } : item
+      ),
+    });
 
   render = () => (
     <div className="container">
@@ -41,12 +64,16 @@ export default class App extends Component {
             value={this.state.newTodo}
             onChange={this.updateValue}
           />
+          <button className="btn btn-primary" onClick={this.newTodo}>
+            Add
+          </button>
         </div>
         <div className="col-12">
           <table className="table">
             <thead>
               <tr>
                 <th>Task</th>
+                <th>Complete</th>
               </tr>
             </thead>
             <tbody>{this.todoRows()}</tbody>
